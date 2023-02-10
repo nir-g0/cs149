@@ -1,0 +1,134 @@
+    1  gcc -v
+    2  sudo apt install gcc
+    3  gcc -v
+    4  whereis gcc
+    5  /usr/share/gcc /usr/share/man/man1/gcc.1
+    6  open /usr/share/gcc /usr/share/man/man1/gcc.1
+    7  gedit program.c
+    8  gcc program.c
+    9  gcc -o program.c
+   10  gedit program.c
+   11  ./program
+   12  wdaw
+   13  gcc program.c
+   14  gcc program.c
+   15  ./program
+   16  ./a.out
+   17  gcc -o program program.c
+   18  ./a.out program.c
+   19  gcc program.c
+   20  ./a.out program.c
+   21  gcc -o program program.c
+   22  ./a.out program.c
+   23  gcc -o program program.c
+   24  gcc program.c
+   25  ./a.out program.c
+   26  gcc -o program program.c
+   27  pwd
+   28  cd ~
+   29  pwd
+   30  cd Desktop/
+   31  ls -latr
+   32  mkdir cs149
+   33  cd cs149
+   34  git init
+   35  git remote add origin https://github.com/nir-g0/cs149
+   36  mkdir WS1
+   37  cd WS1
+   38  git add .
+   39  wget -O out.pdf https://tinyurl.com/yy94jltt
+   40  ls -latr
+   41  history > cmds.log 
+   42  git add cmds.log *.c
+   43  git commit -m
+   44  git commit -WS1
+   45  git commit -m
+   46  git commit -m 1
+   47  git config --global user.email "ngub24@gmail.com"
+   48  git commit -m 1
+   49  git add cmds.log *.c
+   50  git add cmds.log
+   51  git commit -m 1
+   52  git branch
+   53  git push -u
+   54  git push --u
+   55  git push -u
+   56  git push --set-upstream origin master
+   57  git init
+   58  git add README.md
+   59  git commit -m "first commit"
+   60  git branch -M main
+   61  git remote add origin https://github.com/nir-g0/cs149.git
+   62  git push -u origin main
+   63  git init
+   64  git add README.md
+   65  git commit -m "first commit"
+   66  git branch -M main
+   67  git remote add origin https://github.com/nir-g0/cs149.git
+   68  git push -u origin main'
+   69  git commit -m "first commit"
+   70  git add *.c
+   71  git commit -m "first commit"
+   72  git push
+   73  git push -u origin main'
+   74  git add *.c
+   75  cd /Desktop
+   76  cd \Desktop
+   77  cd cs149
+   78  git init
+   79  cd ..
+   80  ls -latr
+   81  mkdir cs149
+   82  cd cs149
+   83  git init
+   84  git remote add origin https://github.com/nir-g0/cs149.git
+   85  mkdir WS1
+   86  cd WS1
+   87  git add .
+   88  wget -0 out.pdf https://tinyurl.com/yy94jltt
+   89  wget -O out.pdf https://tinyurl.com/yy94jlt
+   90  wget -O out.pdf https://tinyurl.com/yy94jltt
+   91  ls -latr
+   92  history > cmds.log
+   93  git add cmds.log *.c
+   94  git add cmds.log
+   95  git commit -m "First commit" -a
+   96  git branch
+   97  git push -u origin master
+   98  gedit 1_15.c
+   99  git add *c
+  100  git commit
+  101  git push
+  102  git add *.c
+  103  git commit
+  104  git push
+  105  cd Desktop
+  106  cd cs149
+  107  git config --global user.email ngub24@gmail.com
+  108  git confic --global user.name nir-g0
+  109  git config --global user.name nir-g0
+  110  cd ws1
+  111  cd WS1
+  112  ls latr
+  113  ls latr-
+  114  ls -latr
+  115  git add *.c
+  116  git commit -m "Second Commit"
+  117  git branch
+  118  git push -u origin master
+  119  cd ..
+  120  cd..
+  121  cd ..
+  122  cd desktop
+  123  cd Desktop
+  124  cd cs149
+  125  mkdir WS2
+  126  cd WS2
+  127  date
+  128  ls -latr
+  129  echo $
+  130  echo $?
+  131  man ps
+  132  ps aux
+  133  top
+  134  history > worksheet2.log
