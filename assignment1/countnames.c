@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 int main(int* argc, char **argv){
-	
+	char names[100][30];
 	FILE *fp;
 	fp = fopen(argv[1],"r");
 	if(fp == NULL) {
@@ -9,16 +9,13 @@ int main(int* argc, char **argv){
     	  return(-1);
    	}
    	else{
-   	  char g[30];
+   	  char name[30];
+   	  fgets(name, 30, fp);
    	  int complete = feof(fp);
-   	  while(1){
-   	  	fgets(g, 30, fp);
+   	  while(!complete){
+   	  	printf("%s",name);
+   	  	fgets(name, 30, fp);
    	  	complete = feof(fp);
-   	  	if(complete){
-   	  		break;
-   	  	}
-   	  	printf("%s",g);
-
    	  }
    	}
 	
