@@ -3,8 +3,8 @@
 
 int main(int* argc, char **argv){
 
-	char names[100][30];
-	int times[100];
+	char names[100][30] = {};
+	int times[100] = {[0 ... 99] = 0};
 	
 	FILE *fp;
 	
@@ -18,36 +18,37 @@ int main(int* argc, char **argv){
    	  char name[30];
    	  fgets(name, 30, fp);
    	  int complete = feof(fp);
+   	  
    	  while(!complete){
    	  	int len = strlen(name);
    	  	if(len == 1){
-   	  		printf("\nEmpty Line\n\n");
+
    	  	}
    	  	else{
    	  		for(int i = 0; i < 100; i++){
-   	  			if(!strcmp(names[i], name) == 0){
-   	  				printf("%s at %d", names[i], i);
+   	  			if(strcmp(names[i], name) == 0){
    	  				times[i] = times[i]+1;
    	  				break;
    	  			}
    	  			if(strlen(names[i]) == 0){
-   	  				for(int b = 0; b < len; b++){
+   	  				for(int b = 0; b < 30; b++){
    	  					names[i][b] = name[b];
    	  				}
-   	  				printf("enterd");
    	  				times[i] = 1;
    	  				break;
-   	  			}
+   	  			} 
    	  		}
-   	  	   	//printf("%s",name);
    	  	}
    	  	fgets(name, 30, fp);
    	  	complete = feof(fp);
    	  }
    	}
 	
-	for(int i = 0; i < 10; i++){
-		printf("%d : %d\n", i, times[i]);
+	for(int i = 0; i < 100; i++){
+		if(strlen(names[i]) != 0){
+			printf("%s printed %d", names[i], times[i]);
+		}
 	}
+	
 	return 0;
 }
