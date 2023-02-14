@@ -46,7 +46,8 @@ int main(int* argc, char **argv){
 	
 	for(int i = 0; i < 100; i++){
 		if(strlen(names[i]) != 0){
-			printf("%s printed %d", names[i], times[i]);
+		        names[i][strlen(names[i])-1] = '\0';
+			printf("%s: %d\n", names[i], times[i]);
 		}
 	}
 	
