@@ -24,12 +24,30 @@ int main(int* argc, char **argv){
    	  		printf("\nEmpty Line\n\n");
    	  	}
    	  	else{
-   	  	   	printf("%s",name);
+   	  		for(int i = 0; i < 100; i++){
+   	  			if(!strcmp(names[i], name) == 0){
+   	  				printf("%s at %d", names[i], i);
+   	  				times[i] = times[i]+1;
+   	  				break;
+   	  			}
+   	  			if(strlen(names[i]) == 0){
+   	  				for(int b = 0; b < len; b++){
+   	  					names[i][b] = name[b];
+   	  				}
+   	  				printf("enterd");
+   	  				times[i] = 1;
+   	  				break;
+   	  			}
+   	  		}
+   	  	   	//printf("%s",name);
    	  	}
    	  	fgets(name, 30, fp);
    	  	complete = feof(fp);
    	  }
    	}
 	
+	for(int i = 0; i < 10; i++){
+		printf("%d : %d\n", i, times[i]);
+	}
 	return 0;
 }
