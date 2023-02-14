@@ -10,10 +10,16 @@ int main(int* argc, char **argv){
    	}
    	else{
    	  char g[30];
-   	  fgets(g, 30, fp);
-   	  printf("%s",g);
-   	  fgets(g, 30, fp);
-   	  printf("%s",g);
+   	  int complete = feof(fp);
+   	  while(1){
+   	  	fgets(g, 30, fp);
+   	  	complete = feof(fp);
+   	  	if(complete){
+   	  		break;
+   	  	}
+   	  	printf("%s",g);
+
+   	  }
    	}
 	
 	return 0;
