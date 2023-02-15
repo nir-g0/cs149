@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-int main(int* argc, char **argv){
+int main(int argc, char **argv){
 
 	char names[100][30] = {};
 	int times[100] = {[0 ... 99] = 0};
@@ -18,11 +18,11 @@ int main(int* argc, char **argv){
    	  char name[30];
    	  fgets(name, 30, fp);
    	  int complete = feof(fp);
-   	  
+   	  int line = 1;
    	  while(!complete){
    	  	int len = strlen(name);
    	  	if(len == 1){
-
+			fprintf( stderr, "Warning - Line %d is empty\n", line);
    	  	}
    	  	else{
    	  		for(int i = 0; i < 100; i++){
@@ -41,6 +41,7 @@ int main(int* argc, char **argv){
    	  	}
    	  	fgets(name, 30, fp);
    	  	complete = feof(fp);
+   	  	line += 1;
    	  }
    	}
 	
