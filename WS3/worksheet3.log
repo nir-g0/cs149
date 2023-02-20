@@ -1,0 +1,12 @@
+    1  wget https://github.com/torvalds/linux/archive/master.zip (this will download the entire linux kernel source code)
+    2  wget https://github.com/torvalds/linux/archive/master.zip
+    3  unzip master.zip
+    4  cd linux-master
+    5  pwd
+    6  alias l='ls -latr'
+    7  l
+    8  find . -name mem.c
+    9  find . -name mem.c | xargs head
+   10  find . -name mem.c | xargs grep 86 
+   11  cd ..
+   12  history > worksheet3.log
