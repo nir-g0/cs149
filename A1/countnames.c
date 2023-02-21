@@ -1,3 +1,11 @@
+/**
+ * Description: This program scans a text file for names and prints the amount of times they appear
+ * Author name: Nir Guberman 
+ * Author email: Nir.guberman@sjsu.edu
+ * Last modified date: 2/20/23
+ * Creation date: 2/12/23
+ **/
+
 #include <stdio.h>
 #include <string.h>
 
@@ -23,13 +31,15 @@ int main(int argc, char **argv){
    	  int line = 1;
    	  //Iterates until reached end of file
    	  while(!complete){
-   	  	int len = strlen(name);
    	  	//empty line catch
-   	  	if(len == 1){
-			fprintf( stderr, "Warning - Line %d is empty\n", line);
+   	  	if(name[0]== '\n'){
+			fprintf(stderr, "Warning - Line %d is empty\n", line);
    	  	}
    	  	//search name function
    	  	else{
+   	  		if (name[strlen(name) - 1] == '\n'){
+   	  		name[strlen(name)-1] = '\0';
+   	  		}
    	  		for(int i = 0; i < 100; i++){ 
    	  			/*if the name is in the list of names, add one to the amount of 		
    	  			times it appears*/
@@ -52,6 +62,7 @@ int main(int argc, char **argv){
    	  	line += 1;
    	  }
    	}
+   	fclose(fp);
 	//this loop prints the names and how many times they appear
 	for(int i = 0; i < 100; i++){
 		if(strlen(names[i]) != 0){
