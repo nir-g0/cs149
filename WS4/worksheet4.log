@@ -1,0 +1,46 @@
+    1  sudo apt install ubuntu-desktop
+    2  sudo restart
+    3  sudo reset
+    4  sudo reboot
+    5  gcc -o countnames countnames.c -Wall -Werror
+    6  ./countnames names.txt
+    7  git add .
+    8  git commit -m "Test commit" -a
+    9  git push -u origin master
+   10  gcc -o countnames countnames.c -Wall -Werror
+   11  ./countnames names.txt
+   12  gcc -o countnames countnames.c -Wall -Werror
+   13  ./countnames names.txt
+   14  gcc -o countnames countnames.c -Wall -Werror
+   15  ./countnames names.txt
+   16  ./countnames name3s.txt
+   17  gcc -o countnames countnames.c -Wall -Werror
+   18  ./countnames name3s.txt
+   19  gcc -o countnames countnames.c -Wall -Werror
+   20  ./countnames name3s.txt
+   21  gcc -o countnames countnames.c -Wall -Werror
+   22  cd /Desktop
+   23  cd Desktop
+   24  cd cs149/WS4
+   25  wget http://www.apuebook.com/src.3e.tar.gz
+   26  gunzip src.3e.tar.gz
+   27  tar xvf src.3e.tar
+   28  cd apue.3e
+   29  cd proc
+   30  make all
+   31  ./fork1
+   32  ./fork2
+   33  sudo apt install make
+   34  make all
+   35  ./fork1
+   36  ./fork2
+   37  pwd
+   38  pstree
+   39  ps -a -f -x
+   40  ps -a -f -x | more
+   41  top
+   42  man kill
+   43  ech $?
+   44  echo $?
+   45  echo $$
+   46  history > worksheet4.log
