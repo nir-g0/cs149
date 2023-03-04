@@ -8,7 +8,8 @@
 
 #include <stdio.h>
 #include <string.h>
-#include<stdlib.h>
+#include <stdlib.h>
+#include <unistd.h>
 
 int main(int argc, char **argv){
 
@@ -17,6 +18,11 @@ int main(int argc, char **argv){
 	pid_t pid;
 	int argNum = 1;
 	FILE *fp;
+	int parentChildPipe[2];
+	
+	if(pipe(parentChildPipe) == -1){
+		return 1;
+	}
 	
 	for(int i = 1; i < argc; i++){
 	   pid = fork();
@@ -45,7 +51,7 @@ int main(int argc, char **argv){
 	   	  while(!complete){
 	   	  	//empty line catch
 	   	  	if(name[0]== '\n'){
-				fprintf(stderr, "Warning - Line %d is empty\n", line);
+				fprintf(stderr, "Warning - File %s Line %d is empty\n", argv[argNum], line);
 	   	  	}
 	   	  	//search name function
 	   	  	else{
