@@ -7,9 +7,11 @@
  **/
 
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 int main(int argc, char **argv){
 
@@ -20,24 +22,27 @@ int main(int argc, char **argv){
 	FILE *fp;
 	int namePipe[2];
 	int countPipe[2];
+	char buf[30] = {};
 	
 	if(pipe(namePipe) == -1){
-		return 1;
+		fprintf(stderr, "Pipe failed");
+       		return 1;
 	}
 	if(pipe(countPipe) == -1){
-		return 1;
+		fprintf(stderr, "Pipe failed");
+        	return 1;
 	}
 	
 	for(int i = 1; i < argc; i++){
 	   pid = fork();
+	   argNum = i;
 	   if(pid == 0){
-	   	argNum = i;
 	   	break;
 	   }
 	}
 	
-	//Allow the child process to handle reading the files
 	if(pid == 0){
+	   	//Allow the child process to handle reading the files
 		fp = fopen(argv[argNum],"r");
 		close(namePipe[0]);
 		close(countPipe[0]);
@@ -61,9 +66,9 @@ int main(int argc, char **argv){
 	   	  	}
 	   	  	//search name function
 	   	  	else{
-	   	  		//if (name[strlen(name)] == '\n'){
-	   	  		//	name[strlen(name)] = '\0';
-	   	  		//}
+	   	  		if (name[strlen(name)-1] == '\n'){
+	   	  			name[strlen(name)-1] = '\0';
+	   	  		}
 	   	  		for(int i = 0; i < 100; i++){ 
 	   	  			/*if the name is in the list of names, add one to the amount of 		
 	   	  			times it appears*/
@@ -76,9 +81,14 @@ int main(int argc, char **argv){
 	   	  				for(int b = 0; b < 30; b++){
 	   	  					names[i][b] = name[b];
 	   	  				}
-	   	  				if(write(namePipe[1], name, strlen(name)-1) != 0){
-	   	  					fprintf(stderr, "ERROR WRITING\n");
+	   	  				printf("File: %s, Name: %s is a new name, now writing: ",argv[argNum], name);
+	   	  				if(write(namePipe[1], name, 30) < 0 ){
+	   	  					printf("Error Writing \n");
 	   	  				}
+	   	  				else{
+	   	  					printf("- Success\n");
+	   	  				}
+	   	  				
 	   	  				times[i] = 1;
 	   	  				break;
 	   	  			} 
@@ -92,16 +102,23 @@ int main(int argc, char **argv){
 	   	close(countPipe[1]);
 	   	close(namePipe[1]);
 	   	fclose(fp);
+	   	exit(0);
+	   }
+	
+	
+	
+	while(wait(NULL) > 0){
+		 while( read(namePipe[0],buf,30 ) > 0 ){
+              		printf("Reading from buffer for children gives:  %s \n",buf);
+       		 }
+		//this loop prints the names and how many times they appear
+			//for(int i = 0; i < 100; i++){
+			//	if(strlen(names[i]) != 0){
+			//		names[i][strlen(names[i])-1] = '\0';
+			//		printf("%s: %d\n", names[i], times[i]);
+			//	}
+			//}
 	}
 	
-	if(pid > 0){
-	//this loop prints the names and how many times they appear
-		for(int i = 0; i < 100; i++){
-			if(strlen(names[i]) != 0){
-				names[i][strlen(names[i])-1] = '\0';
-				printf("%s: %d\n", names[i], times[i]);
-			}
-		}
-	}
 	return 0;
 }
