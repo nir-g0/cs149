@@ -18,9 +18,13 @@ int main(int argc, char **argv){
 	pid_t pid;
 	int argNum = 1;
 	FILE *fp;
-	int parentChildPipe[2];
+	int namePipe[2];
+	int countPipe[2];
 	
-	if(pipe(parentChildPipe) == -1){
+	if(pipe(namePipe) == -1){
+		return 1;
+	}
+	if(pipe(countPipe) == -1){
 		return 1;
 	}
 	
@@ -35,6 +39,8 @@ int main(int argc, char **argv){
 	//Allow the child process to handle reading the files
 	if(pid == 0){
 		fp = fopen(argv[argNum],"r");
+		close(namePipe[0]);
+		close(countPipe[0]);
 		
 		//Checks for error in opening file
 		if(fp == NULL) {
@@ -55,9 +61,9 @@ int main(int argc, char **argv){
 	   	  	}
 	   	  	//search name function
 	   	  	else{
-	   	  		if (name[strlen(name)] == '\n'){
-	   	  			name[strlen(name)] = '\0';
-	   	  		}
+	   	  		//if (name[strlen(name)] == '\n'){
+	   	  		//	name[strlen(name)] = '\0';
+	   	  		//}
 	   	  		for(int i = 0; i < 100; i++){ 
 	   	  			/*if the name is in the list of names, add one to the amount of 		
 	   	  			times it appears*/
@@ -70,6 +76,9 @@ int main(int argc, char **argv){
 	   	  				for(int b = 0; b < 30; b++){
 	   	  					names[i][b] = name[b];
 	   	  				}
+	   	  				if(write(namePipe[1], name, strlen(name)-1) != 0){
+	   	  					fprintf(stderr, "ERROR WRITING\n");
+	   	  				}
 	   	  				times[i] = 1;
 	   	  				break;
 	   	  			} 
@@ -80,6 +89,8 @@ int main(int argc, char **argv){
 	   	  	line += 1;
 	   	  }
 	   	}
+	   	close(countPipe[1]);
+	   	close(namePipe[1]);
 	   	fclose(fp);
 	}
 	
