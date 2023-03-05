@@ -16,13 +16,14 @@
 int main(int argc, char **argv){
 
 	char names[100][30] = {};
+	char tempNamesArr[100][30] = {};
 	int times[100] = {[0 ... 99] = 0};
+	int tempTimesArr[100] = {[0 ... 99] = 0};
 	pid_t pid;
 	int argNum = 1;
 	FILE *fp;
 	int namePipe[2];
 	int countPipe[2];
-	char buf[30] = {};
 	
 	if(pipe(namePipe) == -1){
 		fprintf(stderr, "Pipe failed");
@@ -81,14 +82,6 @@ int main(int argc, char **argv){
 	   	  				for(int b = 0; b < 30; b++){
 	   	  					names[i][b] = name[b];
 	   	  				}
-	   	  				printf("File: %s, Name: %s is a new name, now writing: ",argv[argNum], name);
-	   	  				if(write(namePipe[1], name, 30) < 0 ){
-	   	  					printf("Error Writing \n");
-	   	  				}
-	   	  				else{
-	   	  					printf("- Success\n");
-	   	  				}
-	   	  				
 	   	  				times[i] = 1;
 	   	  				break;
 	   	  			} 
@@ -99,6 +92,10 @@ int main(int argc, char **argv){
 	   	  	line += 1;
 	   	  }
 	   	}
+	   	if(write(namePipe[1], names, sizeof(names)) < 0 ){
+	   		printf("Error Writing \n");
+	   	}
+	   	  				
 	   	close(countPipe[1]);
 	   	close(namePipe[1]);
 	   	fclose(fp);
@@ -106,19 +103,40 @@ int main(int argc, char **argv){
 	   }
 	
 	
-	
-	while(wait(NULL) > 0){
-		 while( read(namePipe[0],buf,30 ) > 0 ){
-              		printf("Reading from buffer for children gives:  %s \n",buf);
-       		 }
-		//this loop prints the names and how many times they appear
-			//for(int i = 0; i < 100; i++){
-			//	if(strlen(names[i]) != 0){
-			//		names[i][strlen(names[i])-1] = '\0';
-			//		printf("%s: %d\n", names[i], times[i]);
-			//	}
-			//}
+	if(pid > 0){
+		while(wait(NULL) > 0){
+			close(countPipe[1]);
+		   	close(namePipe[1]);
+
+			read(namePipe[0],tempNamesArr,sizeof(names));
+
+			//this loop reads the names and how many times they appear
+			for(int i = 0; i < 100; i++){
+				if(strlen(tempNamesArr[i]) != 0){ //read all of the names in the tempArr
+					for(int b = 0; b < 100; b++){ 
+			  			/*if the name is in the list of names, add one to the amount of 		
+			  			times it appears*/
+			  			if(strcmp(names[b], tempNamesArr[i]) == 0){
+			  				times[i] += tempTimesArr[i];
+			  				break;
+			  			}
+			  			//if the name is not in the list of names, add name to the list
+			  			if(strlen(names[i]) == 0){
+			  				for(int n = 0; n < 30; n++){
+			  					names[b][n] = tempNamesArr[i][n];
+			  				}
+			  				times[b] = tempTimesArr[i];
+			  				break;
+			  			} 
+		   	  		}
+	   	  		}
+	   	  		else{
+	   	  			break;
+	   	  		}
+			}
+		}
 	}
+	
 	
 	return 0;
 }
