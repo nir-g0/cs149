@@ -93,7 +93,10 @@ int main(int argc, char **argv){
 	   	  }
 	   	}
 	   	if(write(namePipe[1], names, sizeof(names)) < 0 ){
-	   		printf("Error Writing \n");
+	   		printf("Error Writing Names Arr\n");
+	   	}
+	   	if(write(countPipe[1], times, sizeof(times)) < 0){
+	   		printf("Error Writing Counts Arr\n");
 	   	}
 	   	  				
 	   	close(countPipe[1]);
@@ -109,7 +112,7 @@ int main(int argc, char **argv){
 		   	close(namePipe[1]);
 
 			read(namePipe[0],tempNamesArr,sizeof(names));
-
+			read(countPipe[0],tempTimesArr,sizeof(times));
 			//this loop reads the names and how many times they appear
 			for(int i = 0; i < 100; i++){
 				if(strlen(tempNamesArr[i]) != 0){ //read all of the names in the tempArr
@@ -121,7 +124,7 @@ int main(int argc, char **argv){
 			  				break;
 			  			}
 			  			//if the name is not in the list of names, add name to the list
-			  			if(strlen(names[i]) == 0){
+			  			if(strlen(names[b]) == 0){
 			  				for(int n = 0; n < 30; n++){
 			  					names[b][n] = tempNamesArr[i][n];
 			  				}
@@ -135,6 +138,12 @@ int main(int argc, char **argv){
 	   	  		}
 			}
 		}
+		for(int i = 0; i < 100; i++){
+		if(strlen(names[i]) != 0){
+		        //names[i][strlen(names[i])-1] = '\0';
+			printf("%s: %d\n", names[i], times[i]);
+		}
+	}
 	}
 	
 	
