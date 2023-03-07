@@ -14,9 +14,13 @@
 #include <sys/wait.h>
 
 int main(int argc, char **argv){
+	
+	if(argc == 0){
+		return 0;
+	}
 
-	char names[100][30] = {};
-	char tempNamesArr[100][30] = {};
+	char names[100][30] = {}; //final output
+	char tempNamesArr[100][30] = {}; 
 	int times[100] = {[0 ... 99] = 0};
 	int tempTimesArr[100] = {[0 ... 99] = 0};
 	pid_t pid;
@@ -41,17 +45,18 @@ int main(int argc, char **argv){
 	   	break;
 	   }
 	}
-	
+	//forked child process
 	if(pid == 0){
 	   	//Allow the child process to handle reading the files
 		fp = fopen(argv[argNum],"r");
+			
 		close(namePipe[0]);
 		close(countPipe[0]);
 		
 		//Checks for error in opening file
 		if(fp == NULL) {
-	     	  perror("Error opening file");
-	    	  return(-1);
+	     	 	fprintf(stdout, "range: cannot open file\n");
+			exit(1);
 	   	}
 	   	//Iterates through the list of names
 	   	else{
@@ -105,13 +110,15 @@ int main(int argc, char **argv){
 	   	exit(0);
 	   }
 	
-	
+	//parent process
 	if(pid > 0){
+		//for each process, read the output in the pipe and put the output into a temp array to read from
+		//then put the output into a final array to print
 		while(wait(NULL) > 0){
 			close(countPipe[1]);
 		   	close(namePipe[1]);
 
-			read(namePipe[0],tempNamesArr,sizeof(names));
+			read(namePipe[0],tempNamesArr,sizeof(names)); 
 			read(countPipe[0],tempTimesArr,sizeof(times));
 			//this loop reads the names and how many times they appear
 			for(int i = 0; i < 100; i++){
@@ -138,6 +145,7 @@ int main(int argc, char **argv){
 	   	  		}
 			}
 		}
+		//print output
 		for(int i = 0; i < 100; i++){
 		if(strlen(names[i]) != 0){
 		        //names[i][strlen(names[i])-1] = '\0';
