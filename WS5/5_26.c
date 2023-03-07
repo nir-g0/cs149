@@ -2,14 +2,14 @@
 #include <string.h>
 
 int main() {
-    char str[50];
+    char string[50];
     int count = 0;
     int i = 0;
 
-    fgets(str, 50, stdin);
+    fgets(string, 50, stdin);
 
-    while (str[i] != '\0') {
-        if (!isspace(str[i]) && str[i] != '.' && str[i] != '!' && str[i] != ',') {
+    while (string[i] != '\0') {
+        if (!isspace(string[i]) && string[i] != '.' && string[i] != '!' && string[i] != ',') {
             count++;
         }
         i++;
