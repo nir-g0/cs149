@@ -1,41 +1,53 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/wait.h>
 
-int main(int argc, char **argv){
+#define MAX_LINE_LENGTH 1024
 
-	if(argc == 0){
-		return 0;
-	}
+int main(){
+
 	
-	char commands[100][30] = {};
-	pid_t pid;
+	
+	int buffersize = 30;
+	char command[buffersize];
+	int pid;
 	int argNum;
 	int outFileFD;
 	int errFileFD;
-	char *stdoutFile;
-	char *stderrFile;
+	char stdoutFile[MAX_LINE_LENGTH];
+	char stderrFile[MAX_LINE_LENGTH];
+	int i = 1;
 	
-	for(int i = 1; i < argc; i++){
+	while(fgets(command, buffersize , stdin)){
+	
 		pid = fork();
 		argNum = i;
 		
-		
-		sprintf(stdoutFile, "%d.txt", pid);
-		sprintf(stderrFile, "%d.err", pid);
-		
 
-		outFileFD = open(stdoutFile, O_RDWR | O_CREAT | O_APPEND, 0777);
-		errFileFD = open(stderrFile, O_RDWR | O_CREAT | O_APPEND, 0777);
+		
 			
 		if(pid == 0){
 		
+			sprintf(stdoutFile, "%d.out", getpid());
+			sprintf(stderrFile, "%d.err", getpid());
+		
+			outFileFD = open(stdoutFile, O_RDWR | O_CREAT | O_APPEND, 0777);
+			errFileFD = open(stderrFile, O_RDWR | O_CREAT | O_APPEND, 0777);
+		
 			dup2(outFileFD, 1);
 			dup2(errFileFD, 2);
-			
-			printf("Starting command %d: child %d pid of parent %d", argNum, getpid(), getppid());
+		
+			printf("Starting command %d: child %d pid of parent %d\n", argNum, getpid(), getppid());
 
 		}
 		else{
-			wait();
+			while (wait ( NULL) != -1) {
+				printf("Ending command %d\n", argNum);
+				i++;
+			}
 		}
 		
 		
