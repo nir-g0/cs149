@@ -26,25 +26,39 @@ int main(){
 		pid = fork();
 		argNum = i;
 		
-
 		
-			
 		if(pid == 0){
+		
+
 		
 			sprintf(stdoutFile, "%d.out", getpid());
 			sprintf(stderrFile, "%d.err", getpid());
 		
 			outFileFD = open(stdoutFile, O_RDWR | O_CREAT | O_APPEND, 0777);
 			errFileFD = open(stderrFile, O_RDWR | O_CREAT | O_APPEND, 0777);
-		
-			dup2(outFileFD, 1);
-			dup2(errFileFD, 2);
-		
-			printf("Starting command %d: child %d pid of parent %d\n", argNum, getpid(), getppid());
+			
+			
+			
+			if(dup2(outFileFD, 1) < 0){
+				printf("DUP2 FAILED");
+				exit(127);
+			}
+			if(dup2(errFileFD, 2) < 0){
+				printf("DUP2 FAILED");
+				exit(127);
+			}
+			
+			char message[MAX_LINE_LENGTH];
+			sprintf(message,"Starting command %d: child %d pid of parent %d\n", argNum, getpid(), getppid());
+			write(outFileFD, message, strlen(message));
+			
+			exit(0);
 
+			
 		}
 		else{
 			while (wait ( NULL) != -1) {
+
 				printf("Ending command %d\n", argNum);
 				i++;
 			}
