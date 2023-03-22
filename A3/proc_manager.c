@@ -43,7 +43,7 @@ int main(int argc, char** argv){
 	The first file will be PID.out --> logs the start and stoppage of the child process
 	The second file will be PID.err --> logs the exit code of the process and any other errors in execution
 	*/
-	while(fgets(command, buffersize , stdin)){
+	while(fgets(command, BUFFER_SIZE , stdin)){
 		
 		//create child process
 		pid = fork();
@@ -64,11 +64,11 @@ int main(int argc, char** argv){
 			//Adjust file descriptors so for each process they were taking the proper stdin and stderr inputs
 			if(dup2(outFile, STDOUT_FILENO) < 0){
 				printf("DUP2 FAILED");
-				exit(127);
+				exit(2);
 			}
 			if(dup2(errFile, STDERR_FILENO) < 0){
 				printf("DUP2 FAILED");
-				exit(127);
+				exit(2);
 			}
 					
 			//First message in the PID.out file, tells user that the process is starting to run the command as
@@ -136,6 +136,7 @@ int main(int argc, char** argv){
 
 				}
 			}
+				
 			//iterate to accurately count the amount of commands used
 			i++;
 
