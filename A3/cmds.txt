@@ -1,0 +1,4 @@
+wc names.txt
+wc names_long_redundant.txt
+wc afilethatdoesnotexist
+^D

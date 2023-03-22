@@ -7,13 +7,15 @@
 
 #define MAX_LINE_LENGTH 1024
 
-int main(){
+int main(int argc, char** argv){
 
 	
 	
 	int buffersize = 30;
 	char command[buffersize];
 	char message[MAX_LINE_LENGTH];
+	char* args[100];
+	
 	
 	int pid;
 	int argNum;
@@ -53,25 +55,52 @@ int main(){
 			sprintf(message,"Starting command %d: child %d pid of parent %d\n", argNum, getpid(), getppid());
 			write(outFile, message, strlen(message));
 			
-			exit(0);
+   			char* temp = strtok(command, " ");
+   			char* temp2 = strtok(NULL, "\n");
+   			
+   			args[0] = temp;
+   			args[1] = temp2;
+   			args[2] = NULL;
+    	
+			execvp(args[0], args);
+			
+			fprintf(stderr, "Command: %s", args[0]);
+			if(args[1] != NULL){
+				fprintf(stderr, " %s", args[1]);
+			}
+			exit(2);
 
 		}
 		else{
-			while (wait ( NULL) != -1) {
-				
-				sprintf(stdoutFile, "%d.out", pid);
-				sprintf(stderrFile, "%d.err", pid);
-				
-				FILE *fp;
-				if((fp = fopen(stdoutFile, "a")) == NULL){
-					printf("FILE OPEN ERROR");
-				}
-				
-				sprintf(message,"Finished child %d pid of parent %d\n", pid, getpid());
-				fprintf(fp,message,strlen(message));
+			int exitCode;
+			if (waitpid(pid, &exitCode, 0) != -1) {
+				if(WIFEXITED(exitCode) != -1){
 
-				i++;
+					exitCode = WEXITSTATUS(exitCode);
+					sprintf(stdoutFile, "%d.out", pid);
+					sprintf(stderrFile, "%d.err", pid);
+					
+					FILE *fp;
+					if((fp = fopen(stdoutFile, "a")) == NULL){
+						printf("FILE OPEN ERROR");
+					}
+					
+					sprintf(message,"Finished child %d pid of parent %d\n", pid, getpid());
+					fprintf(fp,message,strlen(message));
+					fclose(fp);
+					
+					if((fp = fopen(stderrFile, "a")) == NULL){
+						printf("FILE OPEN ERROR");
+					}
+					
+					sprintf(message,"Exited with exitcode = %d", exitCode);
+					fprintf(fp, message, strlen(message));
+					fclose(fp);
+
+				}
 			}
+			i++;
+
 		}
 		
 		
