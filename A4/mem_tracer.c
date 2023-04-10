@@ -1,151 +1,245 @@
-/**
-* Description: This program takes commands from stdin and tracks the command's: exit code, start, stop and errors
-* Author name: Nir Guberman 
-* Author email: Nir.guberman@sjsu.edu
-* Last modified date: 3/22/23
-* Creation date: 3/19/23
-**/
-
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <fcntl.h>
-#include <sys/wait.h>
+#include <stdarg.h>
 
-#define MAX_LINE_LENGTH 1024
-#define BUFFER_SIZE 30
-#define MAX_ARGS 100
+/**
+ *CS149 assignment#4 helper code.
+ * See the TODO's in the comments below! You need to implement those.
+*/
 
-int main(int argc, char** argv){
+/**
+ * TRACE_NODE_STRUCT is a linked list of
+ *pointers to function identifiers
+ *TRACE_TOP is the head of the list is the top of the stack
+*/
+struct TRACE_NODE_STRUCT {
+  char* functionid;                // ptr to function identifier (a function name)
+  struct TRACE_NODE_STRUCT* next;  // ptr to next frama
+};
+typedef struct TRACE_NODE_STRUCT TRACE_NODE;
+static TRACE_NODE* TRACE_TOP = NULL;       // ptr to the top of the stack
 
-	char command[BUFFER_SIZE];
-	char message[MAX_LINE_LENGTH];
-	char* args[MAX_ARGS];
+
+/* --------------------------------*/
+/* function PUSH_TRACE */
+/* 
+ * The purpose of this stack is to trace the sequence of function calls,
+ * just like the stack in your computer would do. 
+ * The "global" string denotes the start of the function call trace.
+ * The char *p parameter is the name of the new function that is added to the call trace.
+ * See the examples of calling PUSH_TRACE and POP_TRACE below
+ * in the main, make_extend_array, add_column functions.
+**/
+void PUSH_TRACE(char* p)          // push p on the stack
+{
+  TRACE_NODE* tnode;
+  static char glob[]="global";
+
+  if (TRACE_TOP==NULL) {
+
+    // initialize the stack with "global" identifier
+    TRACE_TOP=(TRACE_NODE*) malloc(sizeof(TRACE_NODE));
+
+    // no recovery needed if allocation failed, this is only
+    // used in debugging, not in production
+    if (TRACE_TOP==NULL) {
+      printf("PUSH_TRACE: memory allocation error\n");
+      exit(1);
+    }
+
+    TRACE_TOP->functionid = glob;
+    TRACE_TOP->next=NULL;
+  }//if
+
+  // create the node for p
+  tnode = (TRACE_NODE*) malloc(sizeof(TRACE_NODE));
+
+  // no recovery needed if allocation failed, this is only
+  // used in debugging, not in production
+  if (tnode==NULL) {
+    printf("PUSH_TRACE: memory allocation error\n");
+    exit(1);
+  }//if
+
+  tnode->functionid=p;
+  tnode->next = TRACE_TOP;  // insert fnode as the first in the list
+  TRACE_TOP=tnode;          // point TRACE_TOP to the first node
+
+}/*end PUSH_TRACE*/
+
+/* --------------------------------*/
+/* function POP_TRACE */
+/* Pop a function call from the stack */
+void POP_TRACE()    // remove the op of the stack
+{
+  TRACE_NODE* tnode;
+  tnode = TRACE_TOP;
+  TRACE_TOP = tnode->next;
+  free(tnode);
+
+}/*end POP_TRACE*/
+
+
+
+/* ---------------------------------------------- */
+/* function PRINT_TRACE prints out the sequence of function calls that are on the stack at this instance */
+/* For example, it returns a string that looks like: global:funcA:funcB:funcC. */
+/* Printing the function call sequence the other way around is also ok: funcC:funcB:funcA:global */
+char* PRINT_TRACE()
+{
+  int depth = 50; //A max of 50 levels in the stack will be combined in a string for printing out.
+  int i, length, j;
+  TRACE_NODE* tnode;
+  static char buf[100];
+
+  if (TRACE_TOP==NULL) {     // stack not initialized yet, so we are
+    strcpy(buf,"global");   // still in the `global' area
+    return buf;
+  }
+
+  /* peek at the depth(50) top entries on the stack, but do not
+     go over 100 chars and do not go over the bottom of the
+     stack */
+
+  sprintf(buf,"%s",TRACE_TOP->functionid);
+  length = strlen(buf);                  // length of the string so far
+  for(i=1, tnode=TRACE_TOP->next;
+                        tnode!=NULL && i < depth;
+                                  i++,tnode=tnode->next) {
+    j = strlen(tnode->functionid);             // length of what we want to add
+    if (length+j+1 < 100) {              // total length is ok
+      sprintf(buf+length,":%s",tnode->functionid);
+      length += j+1;
+    }else                                // it would be too long
+      break;
+  }
+  return buf;
+} /*end PRINT_TRACE*/
+
+// -----------------------------------------
+// function REALLOC calls realloc
+// TODO REALLOC should also print info about memory usage.
+// TODO For this purpose, you need to add a few lines to this function.
+// For instance, example of print out:
+// "File mem_tracer.c, line X, function F reallocated the memory segment at address A to a new size S"
+// Information about the function F should be printed by printing the stack (use PRINT_TRACE)
+void* REALLOC(void* p,int t,char* file,int line)
+{
 	
-	int pid;
-	int argNum;
-	
-	int outFile;
-	int errFile;
-	
-	char stdoutFile[MAX_LINE_LENGTH];
-	char stderrFile[MAX_LINE_LENGTH];
-	int i = 1;
-	
-	
-	/*
-	This while-loop awaits a user input in the stdin (terminal) and executes a command if the input is valid.
-	The input can be a maximum of two words (one space), and the while loop is terminated when the user enters
-	^D or ^z in the terminal. Otherwise, if an input is valid, two output files are created for the child process
-	that was spawned for the command that was input.
-	
-	The first file will be PID.out --> logs the start and stoppage of the child process
-	The second file will be PID.err --> logs the exit code of the process and any other errors in execution
-	*/
-	while(fgets(command, BUFFER_SIZE , stdin) != NULL){
-		
-		//create child process
-		pid = fork();
-		//check which command is being entered (third, fourth, etc..)
-		argNum = i;
-		
-		//IN the child process:
-		if(pid == 0){
-			
-			//Create the names of the output files using the PID of the current process
-			sprintf(stdoutFile, "%d.out", getpid());
-			sprintf(stderrFile, "%d.err", getpid());
-		
-			//Create the files
-			outFile = open(stdoutFile, O_RDWR | O_CREAT | O_APPEND, 0777);
-			errFile = open(stderrFile, O_RDWR | O_CREAT | O_APPEND, 0777);
-			
-			//Adjust file descriptors so for each process they were taking the proper stdin and stderr inputs
-			if(dup2(outFile, STDOUT_FILENO) < 0){
-				printf("DUP2 FAILED");
-				exit(2);
-			}
-			if(dup2(errFile, STDERR_FILENO) < 0){
-				printf("DUP2 FAILED");
-				exit(2);
-			}
-					
-			//First message in the PID.out file, tells user that the process is starting to run the command as
-			//well as it's PID and parent's PID	
-			sprintf(message,"Starting command %d: child %d pid of parent %d\n", argNum, getpid(), getppid());
-			//write the message into PID.out
-			write(outFile, message, strlen(message));
-			
-			//split the command received into multiple parameters in order for later execvp input
-   			char* temp = strtok(command, " ");
-   			char* temp2 = strtok(NULL, "\n");
-   			
-   			args[0] = temp;
-   			args[1] = temp2;
-   			args[2] = NULL;
-    	
-    			//execute the command using execvp
-			execvp(args[0], args);
-			
-			//if execvp fails: print failure message to PID.err file and write the name of the command
-			fprintf(stderr, "Failed Command Execution: %s", args[0]);
-			if(args[1] != NULL){
-				fprintf(stderr, " %s", args[1]);
-			}
-			//if execvp fails: exit with error 2 will be returned
-			exit(2);
-
-		}
-		else{
-			int exitCode; //stores exit status of child process
-			
-			//wait for the child process with specified pid to exit
-			if (waitpid(pid, &exitCode, 0) != -1) {
-				if(WIFEXITED(exitCode) != -1){
-
-					//find the returned exit code of the child process and put it into "exitcode" variable
-					exitCode = WEXITSTATUS(exitCode);
-					
-					//make file names for pid for later access (ASSUME FILES WERE CREATED)
-					sprintf(stdoutFile, "%d.out", pid);
-					sprintf(stderrFile, "%d.err", pid);
-					
-					FILE *fp;
-					
-					//checks if opening file with specifed name does not work: 
-					if((fp = fopen(stdoutFile, "a")) == NULL){
-						printf("FILE OPEN ERROR");
-					}
-					
-					//print message that the child process of the parent completed into child PID.out
-					sprintf(message,"Finished child %d pid of parent %d\n", pid, getpid());
-					fprintf(fp,message,strlen(message));
-					
-					//close file as it no longer needs to be accessed
-					fclose(fp);
-					
-					//checks if opening file with specifed name does not work: 
-					if((fp = fopen(stderrFile, "a")) == NULL){
-						printf("FILE OPEN ERROR");
-					}
-					//print exitcode returned from child into child PID.err
-					sprintf(message,"Exited with exitcode = %d", exitCode);
-					fprintf(fp, message, strlen(message));
-					fclose(fp);
-
-				}
-			}
-				
-			//iterate to accurately count the amount of commands used
-			i++;
-
-		}
-		
-		
-	}
-
-	
-
-	return 0;
+	p = realloc(p,t);
+	fprintf(stdout, "File \"%s\", line %d, function %s reallocated the memory segment at address %p to a new size %d\n",file,line,PRINT_TRACE(),p,t);
+	return p;
 }
+
+// -------------------------------------------
+// function MALLOC calls malloc
+// TODO MALLOC should also print info about memory usage.
+// TODO For this purpose, you need to add a few lines to this function.
+// For instance, example of print out:
+// "File mem_tracer.c, line X, function F allocated new memory segment at address A to size S"
+// Information about the function F should be printed by printing the stack (use PRINT_TRACE)
+void* MALLOC(int t,char* file,int line)
+{
+	void* p;
+	p = malloc(t);
+	fprintf(stdout, "File \"%s\", line %d, function %s allocated new memory segment at address %p to size %d\n",file,line,PRINT_TRACE(),p,t);
+	return p;
+}
+
+// ----------------------------------------------
+// function FREE calls free
+// TODO FREE should also print info about memory usage.
+// TODO For this purpose, you need to add a few lines to this function.
+// For instance, example of print out:
+// "File mem_tracer.c, line X, function F deallocated the memory segment at address A"
+// Information about the function F should be printed by printing the stack (use PRINT_TRACE)
+void FREE(void* p,char* file,int line)
+{
+	fprintf(stdout, "File \"%s\",line %d,function=%s deallocated the memory segment at address %p\n",file,line,PRINT_TRACE(),p);
+	free(p);
+}
+
+#define realloc(a,b) REALLOC(a,b,__FILE__,__LINE__)
+#define malloc(a) MALLOC(a,__FILE__,__LINE__)
+#define free(a) FREE(a,__FILE__,__LINE__)
+
+
+// -----------------------------------------
+// function add_column will add an extra column to a 2d array of ints.
+// This function is intended to demonstrate how memory usage tracing of realloc is done
+// Returns the number of new columns (updated)
+int add_column(int** array,int rows,int columns)
+{
+	PUSH_TRACE("add_column");
+	int i;
+
+	for(i=0; i<rows; i++) {
+	 array[i]=(int*) realloc(array[i],sizeof(int)*(columns+1));
+	 array[i][columns]=10*i+columns;
+	}//for
+	POP_TRACE();
+        return (columns+1);
+}// end add_column
+
+
+// ------------------------------------------
+// function make_extend_array
+// Example of how the memory trace is done
+// This function is intended to demonstrate how memory usage tracing of malloc and free is done
+void make_extend_array()
+{
+       PUSH_TRACE("make_extend_array");
+	int i, j;
+        int **array;
+        int ROW = 4;
+        int COL = 3;
+
+        //make array
+	array = (int**) malloc(sizeof(int*)*4);  // 4 rows
+	for(i=0; i<ROW; i++) {
+	 array[i]=(int*) malloc(sizeof(int)*3);  // 3 columns
+	 for(j=0; j<COL; j++)
+	  array[i][j]=10*i+j;
+	}//for
+
+        //display array
+	for(i=0; i<ROW; i++)
+	 for(j=0; j<COL; j++)
+	  printf("array[%d][%d]=%d\n",i,j,array[i][j]);
+
+	// and a new column
+	int NEWCOL = add_column(array,ROW,COL);
+
+	// now display the array again
+        for(i=0; i<ROW; i++)
+	 for(j=0; j<NEWCOL; j++)
+	  printf("array[%d][%d]=%d\n",i,j,array[i][j]);
+
+	 //now deallocate it
+	 for(i=0; i<ROW; i++)
+		 free((void*)array[i]);
+	 free((void*)array);
+
+	 POP_TRACE();
+         return;
+}//end make_extend_array
+
+
+// ----------------------------------------------
+// function main
+int main()
+{
+        PUSH_TRACE("main");
+
+	make_extend_array();
+
+        POP_TRACE();
+        return(0);
+}// end main
+
+
+
+
+
+
