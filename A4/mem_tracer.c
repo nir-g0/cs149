@@ -1,6 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
+#include <fcntl.h>
 #include <stdarg.h>
 
 /**
@@ -71,7 +73,7 @@ void PUSH_TRACE(char* p)          // push p on the stack
 /* --------------------------------*/
 /* function POP_TRACE */
 /* Pop a function call from the stack */
-void POP_TRACE()    // remove the op of the stack
+void POP_TRACE()    // remove the top of the stack
 {
   TRACE_NODE* tnode;
   tnode = TRACE_TOP;
@@ -228,8 +230,16 @@ void make_extend_array()
 
 // ----------------------------------------------
 // function main
-int main()
-{
+int main(int argc, char** argv)
+{	
+	int outputFile = open("mem_tracer.out", O_RDWR | O_CREAT | O_APPEND, 0777);
+	dup2(outputFile, STDOUT_FILENO);
+	
+	int initArrSize = 10;
+	
+	char** args = (char**)malloc(initArrSize * sizeof(char*));
+	char* input_buffer = (char*)malloc(100*sizeof(char));
+	
         PUSH_TRACE("main");
 
 	make_extend_array();
