@@ -5,10 +5,17 @@
 #include <fcntl.h>
 #include <stdarg.h>
 
-/**
- *CS149 assignment#4 helper code.
- * See the TODO's in the comments below! You need to implement those.
-*/
+
+typedef struct node{
+	char* line;
+	int index;
+	struct node* right;
+} node_t;
+
+typedef struct linked_list {
+   	struct node* head;
+} linkedlist;
+
 
 /**
  * TRACE_NODE_STRUCT is a linked list of
@@ -158,7 +165,7 @@ void* MALLOC(int t,char* file,int line)
 // Information about the function F should be printed by printing the stack (use PRINT_TRACE)
 void FREE(void* p,char* file,int line)
 {
-	fprintf(stdout, "File \"%s\",line %d,function=%s deallocated the memory segment at address %p\n",file,line,PRINT_TRACE(),p);
+	fprintf(stdout, "File \"%s\",line %d,function %s deallocated the memory segment at address %p\n",file,line,PRINT_TRACE(),p);
 	free(p);
 }
 
@@ -166,85 +173,118 @@ void FREE(void* p,char* file,int line)
 #define malloc(a) MALLOC(a,__FILE__,__LINE__)
 #define free(a) FREE(a,__FILE__,__LINE__)
 
+char** extend_array(char** arr, int size){
 
-// -----------------------------------------
-// function add_column will add an extra column to a 2d array of ints.
-// This function is intended to demonstrate how memory usage tracing of realloc is done
-// Returns the number of new columns (updated)
-int add_column(int** array,int rows,int columns)
-{
-	PUSH_TRACE("add_column");
-	int i;
-
-	for(i=0; i<rows; i++) {
-	 array[i]=(int*) realloc(array[i],sizeof(int)*(columns+1));
-	 array[i][columns]=10*i+columns;
-	}//for
+	PUSH_TRACE("extend_array");
+	char** temp = (char**) realloc(arr, size * sizeof(char*));
 	POP_TRACE();
-        return (columns+1);
-}// end add_column
+	
+	return temp;
+}
 
-
-// ------------------------------------------
-// function make_extend_array
-// Example of how the memory trace is done
-// This function is intended to demonstrate how memory usage tracing of malloc and free is done
-void make_extend_array()
-{
-       PUSH_TRACE("make_extend_array");
-	int i, j;
-        int **array;
-        int ROW = 4;
-        int COL = 3;
-
-        //make array
-	array = (int**) malloc(sizeof(int*)*4);  // 4 rows
-	for(i=0; i<ROW; i++) {
-	 array[i]=(int*) malloc(sizeof(int)*3);  // 3 columns
-	 for(j=0; j<COL; j++)
-	  array[i][j]=10*i+j;
-	}//for
-
-        //display array
-	for(i=0; i<ROW; i++)
-	 for(j=0; j<COL; j++)
-	  printf("array[%d][%d]=%d\n",i,j,array[i][j]);
-
-	// and a new column
-	int NEWCOL = add_column(array,ROW,COL);
-
-	// now display the array again
-        for(i=0; i<ROW; i++)
-	 for(j=0; j<NEWCOL; j++)
-	  printf("array[%d][%d]=%d\n",i,j,array[i][j]);
-
-	 //now deallocate it
-	 for(i=0; i<ROW; i++)
-		 free((void*)array[i]);
-	 free((void*)array);
-
-	 POP_TRACE();
-         return;
-}//end make_extend_array
-
+void PrintNodes(node_t* input){
+	node_t* tempNode = NULL;
+	tempNode = input;
+	if(tempNode == NULL){
+		return;
+	}
+	if(tempNode->line != NULL){
+		printf("Index %d: %s\n",tempNode->index, tempNode->line);
+	}
+	if(tempNode->right != NULL){
+		PrintNodes(tempNode->right);
+	}
+}
 
 // ----------------------------------------------
 // function main
 int main(int argc, char** argv)
 {	
-	int outputFile = open("mem_tracer.out", O_RDWR | O_CREAT | O_APPEND, 0777);
+	int outputFile = open("mem_tracer.out", O_RDWR | O_CREAT | O_TRUNC, 0777);
 	dup2(outputFile, STDOUT_FILENO);
 	
-	int initArrSize = 10;
+	int arrSize = 10;
+	int MAX_LINE_SIZE = 100;
+	int count = 0;
 	
-	char** args = (char**)malloc(initArrSize * sizeof(char*));
-	char* input_buffer = (char*)malloc(100*sizeof(char));
+	PUSH_TRACE("main");
 	
-        PUSH_TRACE("main");
+	char** args = (char**)malloc(arrSize * sizeof(char*));
+	char* input_buffer = (char*)malloc(MAX_LINE_SIZE*sizeof(char));
+	
+	POP_TRACE();
+	
+	//linkedlist link;
+	node_t* headNode = (node_t*)malloc(sizeof(node_t));
+	node_t* currNode = headNode;
+	//link.head = headNode;
 
-	make_extend_array();
+	while(1){
+	
+		if(fgets(input_buffer, MAX_LINE_SIZE, stdin) == NULL){
+			if(feof(stdin)){
+				break;
+			}
+		}
+		
+		//if(input_buffer[strlen(input_buffer)-1] =="\n"){
+			input_buffer[strlen(input_buffer) - 1] = '\0';
+			args[count] = strdup(input_buffer);
+		//}
+		if(count == 0){
+			headNode->line = strdup(input_buffer);
+			headNode->index = count;
+		}else{
+			PUSH_TRACE("new_node");
+			node_t* temp = (node_t*)malloc(sizeof(node_t));
+			if(temp == NULL){
+				free(temp);
+				return 1;
+			}
+			if(input_buffer != NULL){
+				temp->line = strdup(input_buffer);
+				temp->index = count;
+			}
+			currNode->right = temp;
+			currNode = currNode->right;
+			POP_TRACE();
+		}
 
-        POP_TRACE();
+
+		count++;
+		
+		if(count == arrSize){
+			arrSize++;
+			args = extend_array(args, arrSize);
+		}
+		
+	}
+
+	if(headNode != NULL){
+		PrintNodes(headNode);
+	}
+	
+	currNode = headNode;
+	node_t* temp = (node_t*)malloc(sizeof(node_t));
+	while(currNode != NULL){
+		temp = currNode->right;
+		free(currNode);
+		currNode = temp;
+	}
+	
+	
+	PUSH_TRACE("free_memory");
+	for(int i = 0; i < count; i++){
+		free(args[i]);
+	}
+	
+	free(args);
+	free(input_buffer);
+	
+	POP_TRACE();
+
+
+        
         return(0);
 }// end main
 

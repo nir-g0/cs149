@@ -1,0 +1,160 @@
+==7114== Memcheck, a memory error detector
+==7114== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==7114== Using Valgrind-3.18.1-42b08ed5bd-20211015 and LibVEX; rerun with -h for copyright info
+==7114== Command: ./option
+==7114== Parent PID: 4163
+==7114== 
+--7114-- 
+--7114-- Valgrind options:
+--7114--    --leak-check=full
+--7114--    --show-leak-kinds=all
+--7114--    --track-origins=yes
+--7114--    --verbose
+--7114--    --log-file=valgrind-out.txt
+--7114-- Contents of /proc/version:
+--7114--   Linux version 5.15.0-69-generic (buildd@bos02-arm64-050) (gcc (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0, GNU ld (GNU Binutils for Ubuntu) 2.38) #76-Ubuntu SMP Fri Mar 17 17:25:19 UTC 2023
+--7114-- 
+--7114-- Arch and hwcaps: ARM64, LittleEndian, v8-fhm-dpbcvadp-sha3-rdm-atomics-fp16-vfp16
+--7114-- Page sizes: currently 4096, max supported 65536
+--7114-- Valgrind library directory: /usr/libexec/valgrind
+--7114-- Reading syms from /home/nir/Desktop/cs149/A4/option
+--7114-- Reading syms from /usr/lib/aarch64-linux-gnu/ld-linux-aarch64.so.1
+--7114--   Considering /usr/lib/debug/.build-id/9a/9c6aeba5df4178de168e26fe30ddcdab47d374.debug ..
+--7114--   .. build-id is valid
+--7114-- Reading syms from /usr/libexec/valgrind/memcheck-arm64-linux
+--7114--    object doesn't have a symbol table
+--7114--    object doesn't have a dynamic symbol table
+--7114-- Scheduler: using generic scheduler lock implementation.
+--7114-- Reading suppressions file: /usr/libexec/valgrind/default.supp
+==7114== embedded gdbserver: reading from /tmp/vgdb-pipe-from-vgdb-to-7114-by-nir-on-???
+==7114== embedded gdbserver: writing to   /tmp/vgdb-pipe-to-vgdb-from-7114-by-nir-on-???
+==7114== embedded gdbserver: shared mem   /tmp/vgdb-pipe-shared-mem-vgdb-7114-by-nir-on-???
+==7114== 
+==7114== TO CONTROL THIS PROCESS USING vgdb (which you probably
+==7114== don't want to do, unless you know exactly what you're doing,
+==7114== or are doing some strange experiment):
+==7114==   /usr/bin/vgdb --pid=7114 ...command...
+==7114== 
+==7114== TO DEBUG THIS PROCESS USING GDB: start GDB like this
+==7114==   /path/to/gdb ./option
+==7114== and then give GDB the following command
+==7114==   target remote | /usr/bin/vgdb --pid=7114
+==7114== --pid is optional if only one valgrind process is running
+==7114== 
+--7114-- REDIR: 0x401ee00 (ld-linux-aarch64.so.1:strlen) redirected to 0x580b918c (???)
+--7114-- REDIR: 0x401de00 (ld-linux-aarch64.so.1:strcmp) redirected to 0x580b91e0 (???)
+--7114-- REDIR: 0x401dd40 (ld-linux-aarch64.so.1:index) redirected to 0x580b91b4 (???)
+--7114-- Reading syms from /usr/libexec/valgrind/vgpreload_core-arm64-linux.so
+--7114--    object doesn't have a symbol table
+--7114-- Reading syms from /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so
+--7114--    object doesn't have a symbol table
+--7114-- Reading syms from /usr/lib/aarch64-linux-gnu/libc.so.6
+--7114--   Considering /usr/lib/debug/.build-id/f3/7f3aa07c797e333fd106472898d361f71798f5.debug ..
+--7114--   .. build-id is valid
+==7114== WARNING: new redirection conflicts with existing -- ignoring it
+--7114--     old: 0x0492e340 (memalign            ) R-> (1011.0) 0x0486a540 memalign
+--7114--     new: 0x0492e340 (memalign            ) R-> (1017.0) 0x0486a520 aligned_alloc
+==7114== WARNING: new redirection conflicts with existing -- ignoring it
+--7114--     old: 0x0492e340 (memalign            ) R-> (1011.0) 0x0486a540 memalign
+--7114--     new: 0x0492e340 (memalign            ) R-> (1017.0) 0x0486a500 aligned_alloc
+--7114-- REDIR: 0x4931620 (libc.so.6:memchr) redirected to 0x4840710 (_vgnU_ifunc_wrapper)
+--7114-- REDIR: 0x4930650 (libc.so.6:strlen) redirected to 0x4840710 (_vgnU_ifunc_wrapper)
+--7114-- REDIR: 0x4930a40 (libc.so.6:rindex) redirected to 0x486ac40 (rindex)
+--7114-- REDIR: 0x492d640 (libc.so.6:malloc) redirected to 0x4864fe0 (malloc)
+--7114-- REDIR: 0x4933700 (libc.so.6:strchrnul) redirected to 0x486f914 (strchrnul)
+--7114-- REDIR: 0x49398c0 (libc.so.6:__GI_strlen) redirected to 0x486b2a0 (__GI_strlen)
+--7114-- REDIR: 0x4939940 (libc.so.6:__strlen_asimd) redirected to 0x486b274 (strlen)
+--7114-- REDIR: 0x4937b40 (libc.so.6:__GI_memcpy) redirected to 0x486cf00 (__GI_memcpy)
+--7114-- REDIR: 0x492dbd4 (libc.so.6:free) redirected to 0x4867a60 (free)
+--7114-- REDIR: 0x49396c0 (libc.so.6:__GI_memchr) redirected to 0x486c490 (__GI_memchr)
+--7114-- REDIR: 0x492de30 (libc.so.6:realloc) redirected to 0x486a110 (realloc)
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x108FCC: PrintNodes (mem_tracer.c:194)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==  Uninitialised value was created by a heap allocation
+==7114==    at 0x4865058: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==7114==    by 0x108E73: MALLOC (mem_tracer.c:154)
+==7114==    by 0x10918B: main (mem_tracer.c:239)
+==7114== 
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x109290: main (mem_tracer.c:270)
+==7114==  Uninitialised value was created by a heap allocation
+==7114==    at 0x4865058: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==7114==    by 0x108E73: MALLOC (mem_tracer.c:154)
+==7114==    by 0x10918B: main (mem_tracer.c:239)
+==7114== 
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x490102C: __vfprintf_internal (vfprintf-internal.c:1516)
+==7114==    by 0x48F099F: fprintf (fprintf.c:32)
+==7114==    by 0x108F03: FREE (mem_tracer.c:168)
+==7114==    by 0x1092CF: main (mem_tracer.c:281)
+==7114== 
+--7114-- REDIR: 0x4930680 (libc.so.6:strnlen) redirected to 0x486b214 (strnlen)
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x4867A84: free (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==7114==    by 0x108F0B: FREE (mem_tracer.c:169)
+==7114==    by 0x1092CF: main (mem_tracer.c:281)
+==7114== 
+==7114== 
+==7114== HEAP SUMMARY:
+==7114==     in use at exit: 0 bytes in 0 blocks
+==7114==   total heap usage: 388 allocs, 388 frees, 54,628 bytes allocated
+==7114== 
+==7114== All heap blocks were freed -- no leaks are possible
+==7114== 
+==7114== ERROR SUMMARY: 202 errors from 4 contexts (suppressed: 0 from 0)
+==7114== 
+==7114== 1 errors in context 1 of 4:
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x109290: main (mem_tracer.c:270)
+==7114==  Uninitialised value was created by a heap allocation
+==7114==    at 0x4865058: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==7114==    by 0x108E73: MALLOC (mem_tracer.c:154)
+==7114==    by 0x10918B: main (mem_tracer.c:239)
+==7114== 
+==7114== 
+==7114== 1 errors in context 2 of 4:
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x108FCC: PrintNodes (mem_tracer.c:194)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==    by 0x108FDB: PrintNodes (mem_tracer.c:195)
+==7114==  Uninitialised value was created by a heap allocation
+==7114==    at 0x4865058: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==7114==    by 0x108E73: MALLOC (mem_tracer.c:154)
+==7114==    by 0x10918B: main (mem_tracer.c:239)
+==7114== 
+==7114== 
+==7114== 100 errors in context 3 of 4:
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x4867A84: free (in /usr/libexec/valgrind/vgpreload_memcheck-arm64-linux.so)
+==7114==    by 0x108F0B: FREE (mem_tracer.c:169)
+==7114==    by 0x1092CF: main (mem_tracer.c:281)
+==7114== 
+==7114== 
+==7114== 100 errors in context 4 of 4:
+==7114== Conditional jump or move depends on uninitialised value(s)
+==7114==    at 0x490102C: __vfprintf_internal (vfprintf-internal.c:1516)
+==7114==    by 0x48F099F: fprintf (fprintf.c:32)
+==7114==    by 0x108F03: FREE (mem_tracer.c:168)
+==7114==    by 0x1092CF: main (mem_tracer.c:281)
+==7114== 
+==7114== ERROR SUMMARY: 202 errors from 4 contexts (suppressed: 0 from 0)
