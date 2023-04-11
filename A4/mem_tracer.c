@@ -154,7 +154,6 @@ void* MALLOC(int t,char* file,int line)
 // ----------------------------------------------
 // function FREE calls free
 // TODO FREE should also print info about memory usage.
-// TODO For this purpose, you need to add a few lines to this function.
 // For instance, example of print out:
 // "File mem_tracer.c, line X, function F deallocated the memory segment at address A"
 // Information about the function F should be printed by printing the stack (use PRINT_TRACE)
@@ -168,88 +167,114 @@ void FREE(void* p,char* file,int line)
 #define malloc(a) MALLOC(a,__FILE__,__LINE__)
 #define free(a) FREE(a,__FILE__,__LINE__)
 
+//This function dynamically increases the size of the array to hold more space
 char** extend_array(char** arr, int size){
 
 	PUSH_TRACE("extend_array");
-	char** temp = (char**) realloc(arr, size * sizeof(char*));
+	char** temp = (char**) realloc(arr, size * sizeof(char*)); //realocates the size to the size of the argument
 	POP_TRACE();
 	
 	return temp;
 }
 
+//recursively prints the nodes of the linked list
 void PrintNodes(node_t* input){
+	//initialize node
 	node_t* tempNode = NULL;
 	tempNode = input;
-	if(tempNode == NULL){
+	if(tempNode == NULL){ 
+	//basecase / terminating case
 		return;
 	}
-	if(tempNode->line != NULL){
+	if(tempNode->line != NULL){ 
+	//if the node has a line attribute, print out its index and line.
 		printf("Index %d: %s\n",tempNode->index, tempNode->line);
 	}
 	if(tempNode->right != NULL){
+	//if there is a next node, recursively call PrintNodes with the next node as an argument
 		PrintNodes(tempNode->right);
 	}
 }
 
+//Frees memory allocated to linked list using while loop
 void FreeNodes(node_t* input){
 	PUSH_TRACE("deallocate_node_memory");
 	node_t* deleteNode = input;
-		
+	
+	//while a the end of the linked list has not been reached
 	while(deleteNode != NULL){
+		//hold the address of the next node
 		node_t* temp = deleteNode->right;
 		if(deleteNode->line != NULL){
+			//free the memory held by the line attribute
 			free(deleteNode->line);
 		}
+		//free the node memory itself
 		free(deleteNode);
 		deleteNode = temp;
 	}
 	POP_TRACE();
 }
 
-// ----------------------------------------------
-// function main
+
+
 int main(int argc, char** argv)
 {	
+	//open output file
 	int outputFile = open("mem_tracer.out", O_RDWR | O_CREAT | O_TRUNC, 0777);
+	//make outputFile be the stdout using dup2();
 	dup2(outputFile, STDOUT_FILENO);
 	
+	//initial array size, assumed max string length, current count of the line
 	int arrSize = 10;
 	int MAX_LINE_SIZE = 100;
 	int count = 0;
 	
 	PUSH_TRACE("main");
 	
+	//allocate memory for the dynamic arguments array 
 	char** args = (char**)malloc(arrSize * sizeof(char*));
+	//buffer that will hold inputs
 	char* input_buffer = (char*)malloc(MAX_LINE_SIZE*sizeof(char));
 	
 	POP_TRACE();
-
-	node_t* headNode = (node_t*)malloc(sizeof(node_t));
+	
+	//allocate memory for the head node of the linked list and initialize a tracker node "currNode"
+	node_t* headNode = NULL;
 	node_t* currNode = NULL;
 
+	//while EOF not reached OR CTRL+D not pressed...
 	while(fgets(input_buffer, MAX_LINE_SIZE, stdin) != NULL){
-
+		//remove '\n' at end of the string
 		input_buffer[strlen(input_buffer) - 1] = '\0';
+		//assign the row index of the dynamic args array with the recently read input using strdup()
 		args[count] = strdup(input_buffer);
 
 		if(count == 0){
-
+		//if first iteration, set the data of the headNode of the linkedlist
+			headNode = (node_t*)malloc(sizeof(node_t));
+			//assigns line attribute
 			headNode->line = strdup(input_buffer);
+			//assigns index attribute
 			headNode->index = count;
+			//assigns currNode
 			currNode = headNode;
 		}else{
 			PUSH_TRACE("new_node");
 			node_t* temp = (node_t*)malloc(sizeof(node_t));
 			if(input_buffer != NULL){
+				//assigns line attribute and index attribute
 				temp->line = strdup(input_buffer);
 				temp->index = count;
 			}
+			//set the next of the temp
 			currNode->right = temp;
 			currNode = currNode->right;
 			POP_TRACE();
 		}
 		count++;
 		
+		//if the count in the array is the same size as the array, reallocate memory
 		if(count == arrSize){
 			arrSize++;
 			char** newArgs = extend_array(args, arrSize);
@@ -268,14 +293,16 @@ int main(int argc, char** argv)
 		PrintNodes(headNode);
 		FreeNodes(headNode);
 	}
+	
 		
 	
 	
 	PUSH_TRACE("free_memory");
+	//free memory
 	for(int i = 0; i < count; i++){
 		free(args[i]);
 	}
-	
+
 	free(args);
 	free(input_buffer);
 	POP_TRACE();
@@ -284,7 +311,7 @@ int main(int argc, char** argv)
 
         
         return(0);
-}// end main
+}
 
 
 
