@@ -12,11 +12,6 @@ typedef struct node{
 	struct node* right;
 } node_t;
 
-typedef struct linked_list {
-   	struct node* head;
-} linkedlist;
-
-
 /**
  * TRACE_NODE_STRUCT is a linked list of
  *pointers to function identifiers
@@ -196,6 +191,21 @@ void PrintNodes(node_t* input){
 	}
 }
 
+void FreeNodes(node_t* input){
+	PUSH_TRACE("deallocate_node_memory");
+	node_t* deleteNode = input;
+		
+	while(deleteNode != NULL){
+		node_t* temp = deleteNode->right;
+		if(deleteNode->line != NULL){
+			free(deleteNode->line);
+		}
+		free(deleteNode);
+		deleteNode = temp;
+	}
+	POP_TRACE();
+}
+
 // ----------------------------------------------
 // function main
 int main(int argc, char** argv)
@@ -213,11 +223,9 @@ int main(int argc, char** argv)
 	char* input_buffer = (char*)malloc(MAX_LINE_SIZE*sizeof(char));
 	
 	POP_TRACE();
-	
-	//linkedlist link;
+
 	node_t* headNode = (node_t*)malloc(sizeof(node_t));
-	node_t* currNode = headNode;
-	//link.head = headNode;
+	node_t* currNode = NULL;
 
 	while(1){
 	
@@ -226,21 +234,18 @@ int main(int argc, char** argv)
 				break;
 			}
 		}
-		
-		//if(input_buffer[strlen(input_buffer)-1] =="\n"){
-			input_buffer[strlen(input_buffer) - 1] = '\0';
-			args[count] = strdup(input_buffer);
-		//}
+
+		input_buffer[strlen(input_buffer) - 1] = '\0';
+		args[count] = strdup(input_buffer);
+
 		if(count == 0){
+
 			headNode->line = strdup(input_buffer);
 			headNode->index = count;
+			currNode = headNode;
 		}else{
 			PUSH_TRACE("new_node");
 			node_t* temp = (node_t*)malloc(sizeof(node_t));
-			if(temp == NULL){
-				free(temp);
-				return 1;
-			}
 			if(input_buffer != NULL){
 				temp->line = strdup(input_buffer);
 				temp->index = count;
@@ -249,13 +254,17 @@ int main(int argc, char** argv)
 			currNode = currNode->right;
 			POP_TRACE();
 		}
-
-
 		count++;
 		
 		if(count == arrSize){
 			arrSize++;
-			args = extend_array(args, arrSize);
+			char** newArgs = extend_array(args, arrSize);
+			if(newArgs == NULL){
+				free(args);
+				return 1;
+			}
+			args = newArgs;
+			
 		}
 		
 	}
@@ -263,15 +272,8 @@ int main(int argc, char** argv)
 	if(headNode != NULL){
 		PrintNodes(headNode);
 	}
-	
-	currNode = headNode;
-	node_t* temp = (node_t*)malloc(sizeof(node_t));
-	while(currNode != NULL){
-		temp = currNode->right;
-		free(currNode);
-		currNode = temp;
-	}
-	
+		
+	FreeNodes(headNode);
 	
 	PUSH_TRACE("free_memory");
 	for(int i = 0; i < count; i++){
@@ -280,9 +282,9 @@ int main(int argc, char** argv)
 	
 	free(args);
 	free(input_buffer);
-	
 	POP_TRACE();
-
+	
+	free(TRACE_TOP);
 
         
         return(0);
