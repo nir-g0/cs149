@@ -1,56 +1,172 @@
 File "mem_tracer.c", line 222, function main:global allocated new memory segment at address 0x4a4a0e0 to size 80
 File "mem_tracer.c", line 223, function main:global allocated new memory segment at address 0x4a4b1b0 to size 100
 File "mem_tracer.c", line 227, function global allocated new memory segment at address 0x4a4b260 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4c450 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4c5c0 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4c720 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4c870 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4c9c0 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4cb10 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4cc60 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4cdb0 to size 24
-File "mem_tracer.c", line 248, function new_node:global allocated new memory segment at address 0x4a4cf00 to size 24
-File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4d000 to a new size 88
-Index 0: wc names.txt
-Index 1: wc names_long_redundant.txt
-Index 2: wc afilethatdoesnotexist
-Index 3: sleep 10
-Index 4: touch 1.txt
-Index 5: touch 2.txt
-Index 6: touch 3.txt
-Index 7: touch 4.txt
-Index 8: pwd
-Index 9: ^D
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c350
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4b840 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4b990 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4bae0 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4bc30 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4bd80 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4bed0 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4c020 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4c170 to size 24
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4c2c0 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4c3c0 to a new size 88
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4c500 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4c600 to a new size 96
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4c740 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4c840 to a new size 104
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4c990 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4ca90 to a new size 112
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4cbe0 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4cce0 to a new size 120
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4ce40 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4cf40 to a new size 128
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4d0a0 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4d1a0 to a new size 136
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4d310 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4d410 to a new size 144
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4d580 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4d680 to a new size 152
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4d800 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4d900 to a new size 160
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4da80 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4db80 to a new size 168
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4dd10 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4de10 to a new size 176
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4dfa0 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4e0a0 to a new size 184
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4e240 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4e340 to a new size 192
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4e4e0 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4e5e0 to a new size 200
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4e790 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4e890 to a new size 208
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4ea40 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4eb40 to a new size 216
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4ed00 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4ee00 to a new size 224
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4efc0 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4f0c0 to a new size 232
+File "mem_tracer.c", line 242, function new_node:global allocated new memory segment at address 0x4a4f290 to size 24
+File "mem_tracer.c", line 174, function extend_array:global reallocated the memory segment at address 0x4a4f390 to a new size 240
+
+Printing Nodes:
+Index 0: 3
+Index 1: 23
+Index 2: 123
+Index 3: 321
+Index 4: 321
+Index 5: 321
+Index 6: 231
+Index 7: 132
+Index 8: 
+Index 9: 123
+Index 10: 123
+Index 11: 21
+Index 12: 312
+Index 13: 321
+Index 14: 123
+Index 15: 213
+Index 16: 231
+Index 17: 213
+Index 18: 231
+Index 19: 123
+Index 20: 312
+Index 21: 213
+Index 22: 12
+Index 23: 3
+Index 24: 312
+Index 25: 213
+Index 26: 123
+Index 27: 123
+Index 28: 123
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4b750
 File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4b260
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c4b0
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c450
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c620
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c5c0
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c780
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c720
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c8d0
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c870
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ca20
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c9c0
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cb70
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cb10
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ccc0
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cc60
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ce10
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cdb0
-File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cf60
-File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cf00
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4c300
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4c3a0
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4c510
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4c680
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4c7d0
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4c920
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4ca70
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4cbc0
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4cd10
-File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4ce60
-File "mem_tracer.c",line 283,function free_memory:global deallocated the memory segment at address 0x4a4d000
-File "mem_tracer.c",line 284,function free_memory:global deallocated the memory segment at address 0x4a4b1b0
-File "mem_tracer.c",line 287,function global deallocated the memory segment at address 0x4a4a040
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4b8a0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4b840
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4b9f0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4b990
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bb40
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bae0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bc90
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bc30
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bde0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bd80
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bf30
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4bed0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c080
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c020
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c1d0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c170
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c320
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c2c0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c560
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c500
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c7a0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c740
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c9f0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4c990
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cc40
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cbe0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4cea0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ce40
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d100
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d0a0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d370
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d310
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d5e0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d580
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d860
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4d800
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4dae0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4da80
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4dd70
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4dd10
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e000
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4dfa0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e2a0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e240
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e540
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e4e0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e7f0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4e790
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4eaa0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ea40
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ed60
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4ed00
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4f020
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4efc0
+File "mem_tracer.c",line 201,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4f2f0
+File "mem_tracer.c",line 203,function deallocate_node_memory:global deallocated the memory segment at address 0x4a4f290
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4b700
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4b7a0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4b8f0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4ba40
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4bb90
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4bce0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4be30
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4bf80
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4c0d0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4c220
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4c460
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4c6a0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4c8f0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4cb40
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4cda0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4d000
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4d270
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4d4e0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4d760
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4d9e0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4dc70
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4df00
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4e1a0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4e440
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4e6f0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4e9a0
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4ec60
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4ef20
+File "mem_tracer.c",line 276,function free_memory:global deallocated the memory segment at address 0x4a4f1f0
+File "mem_tracer.c",line 279,function free_memory:global deallocated the memory segment at address 0x4a4f390
+File "mem_tracer.c",line 280,function free_memory:global deallocated the memory segment at address 0x4a4b1b0
+File "mem_tracer.c",line 283,function global deallocated the memory segment at address 0x4a4a040

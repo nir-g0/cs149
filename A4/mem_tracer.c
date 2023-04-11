@@ -227,13 +227,7 @@ int main(int argc, char** argv)
 	node_t* headNode = (node_t*)malloc(sizeof(node_t));
 	node_t* currNode = NULL;
 
-	while(1){
-	
-		if(fgets(input_buffer, MAX_LINE_SIZE, stdin) == NULL){
-			if(feof(stdin)){
-				break;
-			}
-		}
+	while(fgets(input_buffer, MAX_LINE_SIZE, stdin) != NULL){
 
 		input_buffer[strlen(input_buffer) - 1] = '\0';
 		args[count] = strdup(input_buffer);
@@ -270,10 +264,12 @@ int main(int argc, char** argv)
 	}
 
 	if(headNode != NULL){
+		printf("\nPrinting Nodes:\n");
 		PrintNodes(headNode);
+		FreeNodes(headNode);
 	}
 		
-	FreeNodes(headNode);
+	
 	
 	PUSH_TRACE("free_memory");
 	for(int i = 0; i < count; i++){
