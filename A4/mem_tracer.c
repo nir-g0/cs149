@@ -1,3 +1,12 @@
+/**
+* Description: This program takes commands from stdin and tracks the memory allocation/deallocation
+* 	       It takes inputs into a dynamically allocated array and prints them using a linked list
+* Author name: Nir Guberman 
+* Author email: Nir.guberman@sjsu.edu
+* Last modified date: 4/10/23
+* Creation date: 4/08/23
+**/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
