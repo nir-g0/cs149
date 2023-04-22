@@ -4,7 +4,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <sys/wait.h>
-#include <timer.h>
+#include <time.h>
 
 #define MAX_INPUT_LENGTH 1024
 #define HASH_SIZE 101
@@ -16,7 +16,7 @@ typedef struct node_t{
 	char input[MAX_INPUT_LENGTH];
 	double start;
 	double finish;
-	
+	struct node_t* next;
 	
 } node;
 
@@ -32,28 +32,52 @@ int hashFunction(int pid){
 	return pid % HASH_SIZE;
 }
 
-node* hashTable lookUp(hashtable* table, int pid){
+node* lookUp(hashtable* table, int pid){
 
-	struct nlist *np;
-	for (np = table[hash(s)]; np != NULL; np = np->next)
+	node *np;
+	for (np = table->nodeArray[hashFunction(pid)]; np != NULL; np = np->next)
 		if (pid == np->pid)
 			return np; /* found */
 	return NULL; /* not found */
 	
 }
 
-void hashtableInsert(hashtable* table, int pid, int cmdNum, char* cmd, double strt, double fin){
+node* hashtableInsert(hashtable* table, int pid, int cmdNum, char* cmd, double strt, double fin){
 
-	int bucket = hashFunction(pid);
-	node* bucketNode = table->buckets[bucket];
+	node* bucketNode = lookUp(table, pid);
+	if(bucketNode == NULL){
+		bucketNode = (node*)malloc(sizeof(node));
+		int hashIndex = hashFunction(pid);
+		bucketNode->next = table->nodeArray[hashIndex];
+		table->nodeArray[hashIndex] = bucketNode;
+	}
+	else{
+		free(bucketNode);
+	}
 	
-	while
+	bucketNode->pid = pid;
+	bucketNode->commandNumber = cmdNum;
+	strcpy(bucketNode->input, cmd);
+	bucketNode->start = strt;
+	bucketNode->finish = fin;
+	
+	return bucketNode;
+	
 }
 
 
 
 int main(int argc, char** argv){
-
+	
+	int count = 0;
+	hashtable* table;
+	char* cmd = (char*)malloc(MAX_INPUT_LENGTH*sizeof(char));
+	
+	while(fgets(cmd, MAX_INPUT_LENGTH, stdin)) != NULL){
+		cmd[sizeof(cmd) - 1] = '\0';
+	}
+	
+	
 	return 0;
 }
 
