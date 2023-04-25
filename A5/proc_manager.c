@@ -45,23 +45,20 @@ node* lookUp(hashtable* table, int pid){
 node* hashtableInsert(hashtable* table, int pid, int cmdNum, char* cmd, double strt, double fin){
 
 	node* bucketNode = lookUp(table, pid);
-	if(bucketNode == NULL){
-		bucketNode = (node*)malloc(sizeof(node));
-		int hashIndex = hashFunction(pid);
-		bucketNode->next = table->nodeArray[hashIndex];
-		table->nodeArray[hashIndex] = bucketNode;
-	}
-	else{
-		free(bucketNode);
-	}
-	
-	bucketNode->pid = pid;
-	bucketNode->commandNumber = cmdNum;
-	strcpy(bucketNode->input, cmd);
-	bucketNode->start = strt;
-	bucketNode->finish = fin;
-	
-	return bucketNode;
+    if(bucketNode == NULL){
+        bucketNode = (node*)malloc(sizeof(node));
+        int hashIndex = hashFunction(pid);
+        bucketNode->next = table->nodeArray[hashIndex];
+        table->nodeArray[hashIndex] = bucketNode;
+    }
+
+    bucketNode->pid = pid;
+    bucketNode->commandNumber = cmdNum;
+    strcpy(bucketNode->input, cmd);
+    bucketNode->start = strt;
+    bucketNode->finish = fin;
+
+    return bucketNode;
 	
 }
 
@@ -159,6 +156,8 @@ int main(int argc, char** argv){
 					sprintf(message,"Exited with exitcode = %d\n", exitCode);
 					fprintf(fp, message, strlen(message));
 					
+					fclose(fp);
+					
 					if(duration <= 2){
 						sprintf(message,"spawning too fast\n");
 						fprintf(fp, message, strlen(message));
@@ -178,6 +177,31 @@ int main(int argc, char** argv){
 									if(WIFEXITED(exitCode) != -1){
 										clock_gettime(CLOCK_MONOTONIC, &finish);
 										duration = (finish.tv_nsec - start.tv_nsec)/1000000000.0 + (finish.tv_sec - start.tv_sec);
+										sprintf(stdoutFile, "%d.out", procPID);
+										sprintf(stderrFile, "%d.err", procPID);
+										
+										if((fp = fopen(stdoutFile, "a")) == NULL){
+											printf("FILE OPEN ERROR");
+										}
+										
+										sprintf(message,"Finished child %d pid of parent %d\n", procPID, getpid());
+										fprintf(fp,message,strlen(message));
+
+
+										hashtableInsert(table, procPID, count, cmd, start.tv_sec, finish.tv_sec);
+										
+										sprintf(message,"Finished at %ld, runtime duration %.4f\n", finish.tv_sec,duration);
+										fprintf(fp,message,strlen(message));
+										
+										fclose(fp);									
+										
+										if((fp = fopen(stderrFile, "a")) == NULL){
+											printf("FILE OPEN ERROR");
+										}
+										//print exitcode returned from child into child PID.err
+										sprintf(message,"RESTARTING\nExited with exitcode = %d\n", exitCode);
+										fprintf(fp, message, strlen(message));	
+									
 									}
 								}
 							}
