@@ -44,7 +44,7 @@ int main(int argc, char** argv){
 	The second file will be PID.err --> logs the exit code of the process and any other errors in execution
 	*/
 	while(fgets(command, BUFFER_SIZE , stdin)){
-		
+		printf("%s\n",command);
 		//create child process
 		pid = fork();
 		//check which command is being entered (third, fourth, etc..)

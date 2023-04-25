@@ -65,18 +65,140 @@ node* hashtableInsert(hashtable* table, int pid, int cmdNum, char* cmd, double s
 	
 }
 
-
+void executeChildProc(char* messageString, char* cmd, int count){
+	
+	char* args[MAX_INPUT_LENGTH];
+	
+	char stdoutFile[MAX_INPUT_LENGTH];
+	char stderrFile[MAX_INPUT_LENGTH];
+	char message[MAX_INPUT_LENGTH];
+	int outFile;
+	int errFile;
+		
+	sprintf(stdoutFile, "%d.out", getpid());
+	sprintf(stderrFile, "%d.err", getpid());
+	
+	//Create the files
+	outFile = open(stdoutFile, O_RDWR | O_CREAT | O_APPEND, 0777);
+	errFile = open(stderrFile, O_RDWR | O_CREAT | O_APPEND, 0777);
+		
+	sprintf(message,"%sStarting command %d: child %d pid of parent %d\n", messageString, count, getpid(), getppid());
+	write(outFile, message, strlen(message));
+			
+	char* temp = strtok(cmd, " ");
+   	char* temp2 = strtok(NULL, "\n");
+   			
+   	args[0] = temp;
+   	args[1] = temp2;
+   	args[2] = NULL;
+   			
+   	execvp(args[0], args);
+   	fprintf(stderr, "Failed Command Execution: %s", args[0]);
+   	exit(2); 
+}
 
 int main(int argc, char** argv){
+
+
 	
-	int count = 0;
-	hashtable* table;
+	struct timespec start, finish;
+	
+	int count = 1;
+	hashtable* table = (hashtable*)malloc(sizeof(hashtable));
 	char* cmd = (char*)malloc(MAX_INPUT_LENGTH*sizeof(char));
+	int procPID;
+	double duration;
 	
-	while(fgets(cmd, MAX_INPUT_LENGTH, stdin)) != NULL){
-		cmd[sizeof(cmd) - 1] = '\0';
-	}
 	
+	
+	while(fgets(cmd, MAX_INPUT_LENGTH, stdin) != NULL){
+		
+		clock_gettime(CLOCK_MONOTONIC, &start);
+		procPID = fork();
+		
+		//Create the names of the output files using the PID of the current process		
+
+		if(procPID == 0){
+   			executeChildProc("",cmd, count);
+		}
+		else{
+			int exitCode;
+			if (waitpid(procPID, &exitCode, 0) != -1) {
+				if(WIFEXITED(exitCode) != -1){
+					clock_gettime(CLOCK_MONOTONIC, &finish);
+					char stdoutFile[MAX_INPUT_LENGTH];
+					char stderrFile[MAX_INPUT_LENGTH];
+					char message[MAX_INPUT_LENGTH];
+				
+					sprintf(stdoutFile, "%d.out", procPID);
+					sprintf(stderrFile, "%d.err", procPID);
+					
+					FILE *fp;
+					
+					//checks if opening file with specifed name does not work: 
+					if((fp = fopen(stdoutFile, "a")) == NULL){
+						printf("FILE OPEN ERROR");
+					}
+					
+					sprintf(message,"Finished child %d pid of parent %d\n", procPID, getpid());
+					fprintf(fp,message,strlen(message));
+
+
+					hashtableInsert(table, procPID, count, cmd, start.tv_sec, finish.tv_sec);
+					duration = (finish.tv_nsec - start.tv_nsec)/1000000000.0 + (finish.tv_sec - start.tv_sec);
+					
+					sprintf(message,"Finished at %ld, runtime duration %.4f\n", finish.tv_sec,duration);
+					fprintf(fp,message,strlen(message));
+					
+					fclose(fp);
+					
+					if((fp = fopen(stderrFile, "a")) == NULL){
+						printf("FILE OPEN ERROR");
+					}
+					//print exitcode returned from child into child PID.err
+					sprintf(message,"Exited with exitcode = %d\n", exitCode);
+					fprintf(fp, message, strlen(message));
+					
+					if(duration <= 2){
+						sprintf(message,"spawning too fast\n");
+						fprintf(fp, message, strlen(message));
+					}
+					else{
+						int temp = procPID;
+
+						while(duration > 2){
+							sprintf(message, "%s", lookUp(table, temp)->input);
+							procPID = fork();
+							clock_gettime(CLOCK_MONOTONIC, &start);
+							if(procPID == 0){																
+								executeChildProc("RESTARTING\n", message, count);
+							}
+							else{
+								if (waitpid(procPID, &exitCode, 0) != -1) {
+									if(WIFEXITED(exitCode) != -1){
+										clock_gettime(CLOCK_MONOTONIC, &finish);
+										duration = (finish.tv_nsec - start.tv_nsec)/1000000000.0 + (finish.tv_sec - start.tv_sec);
+									}
+								}
+							}
+							
+							
+						}
+
+					}
+					
+					fclose(fp);
+
+				} 
+				
+			}
+			
+		}
+		count++;
+	} 
+	
+	free(table);
+	free(cmd);
 	
 	return 0;
 }
