@@ -1,0 +1,9 @@
+wc names.txt
+wc names_long_redundant.txt
+wc afilethatdoesnotexist
+sleep 5
+touch 1.txt
+touch 2.txt
+touch 3.txt
+touch 4.txt
+pwd
