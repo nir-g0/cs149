@@ -36,29 +36,35 @@ node* lookUp(hashtable* table, int pid){
 
 	node *np;
 	for (np = table->nodeArray[hashFunction(pid)]; np != NULL; np = np->next)
-		if (pid == np->pid)
+		if (pid == np->pid){
 			return np; /* found */
+		}
 	return NULL; /* not found */
 	
 }
 
-node* hashtableInsert(hashtable* table, int pid, int cmdNum, char* cmd, double strt, double fin){
-
-	node* bucketNode = lookUp(table, pid);
-    if(bucketNode == NULL){
-        bucketNode = (node*)malloc(sizeof(node));
-        int hashIndex = hashFunction(pid);
-        bucketNode->next = table->nodeArray[hashIndex];
-        table->nodeArray[hashIndex] = bucketNode;
-    }
-
+void hashtableInsert(hashtable* table, int pid, int cmdNum, char* cmd, double strt, double fin){
+	
+	node* bucketNode;
+	bucketNode = lookUp(table, pid);
+	
+	if(bucketNode == NULL){
+		printf("BUCKETNODE NULL FOR PID == %d\n", pid);
+		
+    	bucketNode = (node*)malloc(sizeof(node));
+    	
+    	int hashIndex = hashFunction(pid);
+    	bucketNode->next = table->nodeArray[hashIndex];
+    	table->nodeArray[hashIndex] = bucketNode;
+    	
+	}
+	
+	
     bucketNode->pid = pid;
     bucketNode->commandNumber = cmdNum;
     strcpy(bucketNode->input, cmd);
     bucketNode->start = strt;
     bucketNode->finish = fin;
-
-    return bucketNode;
 	
 }
 
@@ -88,6 +94,7 @@ void executeChildProc(char* messageString, char* cmd, int count){
    	args[0] = temp;
    	args[1] = temp2;
    	args[2] = NULL;
+
    			
    	execvp(args[0], args);
    	fprintf(stderr, "Failed Command Execution: %s", args[0]);
@@ -97,16 +104,15 @@ void executeChildProc(char* messageString, char* cmd, int count){
 int main(int argc, char** argv){
 
 
-	
+	int pidArray[HASH_SIZE + 1];
 	struct timespec start, finish;
 	
 	int count = 1;
+	int indexCount = 0;
 	hashtable* table = (hashtable*)malloc(sizeof(hashtable));
 	char* cmd = (char*)malloc(MAX_INPUT_LENGTH*sizeof(char));
 	int procPID;
 	double duration;
-	
-	
 	
 	while(fgets(cmd, MAX_INPUT_LENGTH, stdin) != NULL){
 		
@@ -119,6 +125,7 @@ int main(int argc, char** argv){
    			executeChildProc("",cmd, count);
 		}
 		else{
+			pidArray[indexCount] = procPID;
 			int exitCode;
 			if (waitpid(procPID, &exitCode, 0) != -1) {
 				if(WIFEXITED(exitCode) != -1){
@@ -156,23 +163,27 @@ int main(int argc, char** argv){
 					sprintf(message,"Exited with exitcode = %d\n", exitCode);
 					fprintf(fp, message, strlen(message));
 					
-					fclose(fp);
 					
 					if(duration <= 2){
 						sprintf(message,"spawning too fast\n");
 						fprintf(fp, message, strlen(message));
+						indexCount++;
+						fclose(fp);
 					}
 					else{
+						indexCount++;
+						fclose(fp);
 						int temp = procPID;
 
 						while(duration > 2){
-							sprintf(message, "%s", lookUp(table, temp)->input);
+							sprintf(message, "%s", cmd);
 							procPID = fork();
 							clock_gettime(CLOCK_MONOTONIC, &start);
 							if(procPID == 0){																
 								executeChildProc("RESTARTING\n", message, count);
 							}
 							else{
+								pidArray[indexCount] = procPID;
 								if (waitpid(procPID, &exitCode, 0) != -1) {
 									if(WIFEXITED(exitCode) != -1){
 										clock_gettime(CLOCK_MONOTONIC, &finish);
@@ -188,7 +199,7 @@ int main(int argc, char** argv){
 										fprintf(fp,message,strlen(message));
 
 
-										hashtableInsert(table, procPID, count, cmd, start.tv_sec, finish.tv_sec);
+									    hashtableInsert(table, procPID, count, cmd, start.tv_sec, finish.tv_sec);
 										
 										sprintf(message,"Finished at %ld, runtime duration %.4f\n", finish.tv_sec,duration);
 										fprintf(fp,message,strlen(message));
@@ -201,24 +212,30 @@ int main(int argc, char** argv){
 										//print exitcode returned from child into child PID.err
 										sprintf(message,"RESTARTING\nExited with exitcode = %d\n", exitCode);
 										fprintf(fp, message, strlen(message));	
-									
+										
+										fclose(fp);
+										
+										indexCount++;
 									}
 								}
 							}
-							
-							
 						}
-
 					}
-					
-					fclose(fp);
-
 				} 
-				
 			}
-			
 		}
 		count++;
+	} 
+	
+	
+	
+	for(int i = 0; i < indexCount; i++){
+		node* temp = lookUp(table, pidArray[i]);
+		if(temp == NULL){
+			printf("NULL ERROR\n");
+		}else{
+			free(temp);
+		}
 	} 
 	
 	free(table);
