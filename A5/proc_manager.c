@@ -176,7 +176,7 @@ int main(int argc, char** argv){
 						int temp = procPID;
 
 						while(duration > 2){
-							sprintf(message, "%s", cmd);
+							sprintf(message, "%s", lookup(table, temp)->cmd);
 							procPID = fork();
 							clock_gettime(CLOCK_MONOTONIC, &start);
 							if(procPID == 0){																
