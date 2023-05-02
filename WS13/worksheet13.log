@@ -1,0 +1,15 @@
+    1  rsync -arv filedir/ filedir1/
+    2  cp -r filedir/ filedir2/
+    3  ls -latr filedir1/
+    4  ls -latr filedir2/
+    5  cd filedir1
+    6  ls
+    7  pwd
+    8  rm unlink.c
+    9  touch zap.c
+   10  cat ftw8.c
+   11  cd ..
+   12  mkdir
+   13  mkdir WS13
+   14  cd WS13
+   15  history > worksheet13.log
