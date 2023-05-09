@@ -3,6 +3,8 @@
 #include <string.h>
 #include <pthread.h>
 #include <stdbool.h>
+#include <unistd.h>
+#include <time.h>
 
 #define MAX_INPUTS 100
 #define MAX_NAME_SIZE 30
@@ -10,6 +12,8 @@
 pthread_mutex_t tlock1 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t tlock2 = PTHREAD_MUTEX_INITIALIZER;
 pthread_mutex_t tlock3 = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t tlock4 = PTHREAD_MUTEX_INITIALIZER;
+
 
 void* thread_runner(void*);
 pthread_t tid1, tid2;
@@ -85,7 +89,6 @@ char* arg1;
 char* arg2;
 char namesList[100][30];
 int nameCount;
-int logIndex;
 
 int main(int argc, char** argv){
 	
@@ -94,7 +97,7 @@ int main(int argc, char** argv){
 	arg1 = argv[1];
 	arg2 = argv[2];
 	nameCount = 0;
-	logIndex = 1;
+	logindex = 1;
 
 	printf("create first thread\n");
 	pthread_create(&tid1,NULL,thread_runner,arg1);
@@ -125,27 +128,21 @@ int main(int argc, char** argv){
 // function thread_runner runs inside each thread
 **********************************************************************/
 	
-void* thread_runner(void* x) {
-    char* fileName = (char*)x;
+void printLog(pthread_t me){
 
-
-    pthread_t me;
-    me = pthread_self();
-    
-    pthread_mutex_lock(&tlock1);
-    
-    printf("Logindex %d, thread %ld, PID %d, ", logIndex, me, getpid());
-    logIndex++;
-    
-    pthread_mutex_unlock(&tlock1);
-    
+    printf("\nLogindex %d, thread %ld, PID %d, ", logindex, me, getpid());
     time_t t = time(NULL);
     struct tm *timeinfo = localtime(&t);
     char buffer[80];
     strftime(buffer, 80, "%d/%m/%Y %I:%M:%S %p", timeinfo);
-    printf("%s: opened file %s\n", buffer, fileName);
-    
+    printf("%s: ", buffer);
+}
+	
+void* thread_runner(void* x) {
+    char* fileName = (char*)x;
 
+    pthread_t me;
+    me = pthread_self();
     
     pthread_mutex_lock(&tlock2); // critical section starts
     if (p == NULL) {
@@ -153,20 +150,20 @@ void* thread_runner(void* x) {
         p->creator = me;
     }
     pthread_mutex_unlock(&tlock2); // critical section ends
+    
     THREADDATA* thread_data = p;
     if (thread_data != NULL && thread_data->creator == me) {
         printf("This is thread %ld and I created THREADDATA %p\n", me, thread_data);
     } else {
         printf("This is thread %ld and I can access the THREADDATA %p\n", me, thread_data);
     }
-    // TODO use mutex to make this a start of a critical section
-    // critical section starts
-   FILE* fp = fopen(fileName, "r");
     
+    FILE* fp = fopen(fileName, "r");
     if (fp == NULL) {
         fprintf(stderr, "Error - failed to open file %s\n", fileName);
         pthread_exit(NULL);
     }
+    
     char name[30];
     fgets(name, 30, fp);
     int complete = feof(fp);
